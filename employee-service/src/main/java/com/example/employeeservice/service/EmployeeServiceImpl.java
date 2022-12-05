@@ -7,7 +7,10 @@ import com.example.employeeservice.entity.Employee;
 import com.example.employeeservice.entity.EmployeeWithDepartment;
 import com.example.employeeservice.repository.EmployeeRepository;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -17,6 +20,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
 
+    private static final Logger logger = LoggerFactory.getLogger(EmployeeServiceImpl.class);
     private EmployeeRepository employeeRepository;
     //   private RestTemplate restTemplate;
     //   private WebClient webClient;
@@ -30,9 +34,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         return savedEmployeeDto;
     }
 
-    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
+//    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
+    @Retry(name = "${spring.application.name", fallbackMethod = "getDefaultDepartment")
     @Override
     public EmployeeWithDepartment getEmployee(Long id) {
+
+        logger.info("Inside getEmployee()");
         Employee employee = employeeRepository.findById(id).get();
         EmployeeDto employeeDto = EmployeeDtoService.convertToEmployeeDto(employee);
 
@@ -59,7 +66,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public EmployeeWithDepartment getDefaultDepartment(Long id, Exception exception){
-
+        logger.info("Inside getDefaultDepartment()");
         Employee employee = employeeRepository.findById(id).get();
 
         EmployeeDto employeeDto = EmployeeDtoService.convertToEmployeeDto(employee);

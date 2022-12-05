@@ -23,7 +23,7 @@ management:
     health:
       show-details: ALWAYS
 
-# Circuit breaker configuration
+# Circuit breaker configuration and after that retry configuration
 
 resilience4j:
   circuitbreaker:
@@ -37,7 +37,12 @@ resilience4j:
         permittedNumberOfCallsInHalfOpenState: 3
         slidingWindowSize: 10
         slidingWindowType: COUNT_BASED
-
+  retry:
+    inctances:
+      EMPLOYEE-SERVICE:
+        registerHealthIndicator: true
+        maxRetryAttempts: 5
+        waitDuration: 2s
 
 #  datasource:
 #    driver-class-name: org.postgresql.Driver
