@@ -8,6 +8,37 @@ spring:
     import: optional:configserver:http://localhost:8888
   zipkin:
     base-url: http://127.0.0.1:9411/
+
+
+# Actuator endpoints for circuit breaker
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+# Circuit breaker configuration
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      EMPLOYEE-SERVICE:
+        registerHealthIndicator: true
+        failureRateThreshould: 50
+        minimumNumberOfCalls: 5
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+
+
 #  datasource:
 #    driver-class-name: org.postgresql.Driver
 #    username: postgres

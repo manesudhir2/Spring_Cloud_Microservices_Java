@@ -6,6 +6,7 @@ import com.example.employeeservice.employeedto.EmployeeDtoService;
 import com.example.employeeservice.entity.Employee;
 import com.example.employeeservice.entity.EmployeeWithDepartment;
 import com.example.employeeservice.repository.EmployeeRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return savedEmployeeDto;
     }
 
+    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
     @Override
     public EmployeeWithDepartment getEmployee(Long id) {
         Employee employee = employeeRepository.findById(id).get();
@@ -54,5 +56,26 @@ public class EmployeeServiceImpl implements EmployeeService {
                 departmentDto
         );
         return employeeWithDepartment;
+    }
+
+    public EmployeeWithDepartment getDefaultDepartment(Long id, Exception exception){
+
+        Employee employee = employeeRepository.findById(id).get();
+
+        EmployeeDto employeeDto = EmployeeDtoService.convertToEmployeeDto(employee);
+
+        DepartmentDto departmentDto = new DepartmentDto();
+        departmentDto.setId(12L);
+        departmentDto.setDepartmentName("Demo department");
+        departmentDto.setDepartmentDescription("Demo description");
+        departmentDto.setDepartmentCode("Demo code");
+
+        EmployeeWithDepartment employeeWithDepartment = new EmployeeWithDepartment(
+                employeeDto,
+                departmentDto
+        );
+        return employeeWithDepartment;
+
+
     }
 }
