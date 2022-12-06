@@ -3,6 +3,7 @@ package com.example.employeeservice.service;
 import com.example.employeeservice.employeedto.DepartmentDto;
 import com.example.employeeservice.employeedto.EmployeeDto;
 import com.example.employeeservice.employeedto.EmployeeDtoService;
+import com.example.employeeservice.employeedto.OrganizationDto;
 import com.example.employeeservice.entity.Employee;
 import com.example.employeeservice.entity.EmployeeWithDepartment;
 import com.example.employeeservice.repository.EmployeeRepository;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.LocalDateTime;
+
 @Service
 @AllArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
@@ -25,6 +28,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     //   private RestTemplate restTemplate;
     //   private WebClient webClient;
     private APIClient apiClient;
+    private APIClientOrganization apiClientOrganization;
 
     @Override
     public EmployeeDto saveEmployee(EmployeeDto employeeDto) {
@@ -57,16 +61,19 @@ public class EmployeeServiceImpl implements EmployeeService {
 //                .block();
 
         DepartmentDto departmentDto = apiClient.getDepartmentByCode(employee.getDepartmentCode());
+        OrganizationDto organizationDto = apiClientOrganization.getOrganizationByCode(employee.getOrganizationCode());
 
         EmployeeWithDepartment employeeWithDepartment = new EmployeeWithDepartment(
                 employeeDto,
-                departmentDto
+                departmentDto,
+                organizationDto
         );
         return employeeWithDepartment;
     }
 
     public EmployeeWithDepartment getDefaultDepartment(Long id, Exception exception){
         logger.info("Inside getDefaultDepartment()");
+        LocalDateTime now = LocalDateTime.now();
         Employee employee = employeeRepository.findById(id).get();
 
         EmployeeDto employeeDto = EmployeeDtoService.convertToEmployeeDto(employee);
@@ -77,12 +84,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         departmentDto.setDepartmentDescription("Demo description");
         departmentDto.setDepartmentCode("Demo code");
 
+        OrganizationDto organizationDto = new OrganizationDto();
+        organizationDto.setId(12L);
+        organizationDto.setOrganizationName("Demo organization");
+        organizationDto.setOrganizationDescription("Demo description");
+        organizationDto.setOrganizationCode("Demo code");
+        organizationDto.setCreatedDate(now);
+
         EmployeeWithDepartment employeeWithDepartment = new EmployeeWithDepartment(
                 employeeDto,
-                departmentDto
+                departmentDto,
+                organizationDto
         );
         return employeeWithDepartment;
-
-
     }
 }

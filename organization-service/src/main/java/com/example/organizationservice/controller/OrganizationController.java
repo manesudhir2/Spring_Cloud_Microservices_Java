@@ -20,9 +20,8 @@ public class OrganizationController {
         return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 
-
-    @GetMapping("/get/{code}")
-    public ResponseEntity<OrganizationDto> getByOrganizationCode(@PathVariable("code") String organizationCode){
+    @GetMapping("/get")
+    public ResponseEntity<OrganizationDto> getByOrganizationCode(@RequestParam String organizationCode){
         OrganizationDto organizationDto = organizationServiceImlpl.getByOrganizationDto(organizationCode);
         return new ResponseEntity<>(organizationDto, HttpStatus.OK);
     }
