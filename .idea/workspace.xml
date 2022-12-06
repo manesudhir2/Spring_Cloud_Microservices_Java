@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0147fa41-475a-4c15-a632-ba1c14a5d819" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/API-gateway/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/API-gateway/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/organization-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/organization-service/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/organization-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/organization-service/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
